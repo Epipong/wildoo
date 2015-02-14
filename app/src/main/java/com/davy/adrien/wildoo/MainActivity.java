@@ -11,12 +11,14 @@ import android.view.MenuItem;
 
 public class MainActivity extends Activity {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private RecyclerView.Adapter mAdapter;
-
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        RecyclerView mRecyclerView;
+        RecyclerView.LayoutManager mLayoutManager;
+        RecyclerView.Adapter mAdapter;
+
+
         setContentView(R.layout.activity_main);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -24,7 +26,7 @@ public class MainActivity extends Activity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        String[] data = {"one", "two", "three", "four", "five"};
+        String[] data = {"", "one", "two", "three", "four", "five", "six"};
 
         mAdapter = new CardsAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
