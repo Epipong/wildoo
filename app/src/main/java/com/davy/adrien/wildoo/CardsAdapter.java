@@ -1,19 +1,38 @@
 package com.davy.adrien.wildoo;
 
 
-import android.app.ActionBar;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Space;
 import android.widget.TextView;
 
-// TODO: the Space should be inside the RecyclerView.
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
 
-    private String[] data;
+    private JSONObject data;
+
+    private JSONArray getDataArray() throws JSONException
+    {
+        return data.getJSONArray("tasks");
+    }
+
+    private JSONObject getTask(int position) throws  JSONException
+    {
+        JSONArray a = getDataArray();
+
+        return (JSONObject) a.get(position);
+    }
+
+    private String getTaskName(int position) throws JSONException
+    {
+        JSONObject task = getTask(position);
+
+        return task.getString("name");
+    }
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -53,11 +72,15 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         {
             TextView t = (TextView) mView.findViewById(R.id.task_name);
 
-            t.setText(data[position]);
+            try {
+                t.setText(getTaskName(position));
+            } catch (JSONException e) {
+                t.setText("JSON error");
+            }
         }
     }
 
-    public CardsAdapter(String[] data)
+    public CardsAdapter(JSONObject data)
     {
         this.data = data;
     }
@@ -84,11 +107,12 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         }
     }
 
-    // the first item should be the smiley
+    // the first item should be the smiley (TODO)
     @Override
     public int getItemViewType(int position)
     {
-        return position == 0 ? 0 : 1;
+        return 1;
+        // return position == 0 ? 0 : 1;
     }
 
     @Override
@@ -101,6 +125,11 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
     @Override
     public int getItemCount()
     {
-        return data.length;
+        try {
+            return getDataArray().length();
+        } catch (JSONException e)
+        {
+            return 0;
+        }
     }
 }

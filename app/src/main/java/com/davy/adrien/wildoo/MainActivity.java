@@ -1,6 +1,7 @@
 package com.davy.adrien.wildoo;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -8,8 +9,42 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
+import android.util.Log;
+
 
 public class MainActivity extends Activity {
+
+    private JSONObject readTaskJSON() throws IOException, JSONException
+    {
+        String filename = "tasks.json";
+        String string = "{ \"tasks\" : [ { \"name\" : \"Piano\"}] }";
+        FileOutputStream outputStream;
+
+        try {
+            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+            outputStream.write(string.getBytes());
+            outputStream.close();
+        } catch (Exception e) {
+            Log.i("", "Making the file FAILED !");
+            e.printStackTrace();
+        }
+
+        FileInputStream inputStream = openFileInput(filename);
+        byte[] buffer = new byte[inputStream.available()];
+        inputStream.read(buffer, 0, inputStream.available());
+
+        String resultingJSON = new String(buffer, "UTF-8");
+
+        return new JSONObject(resultingJSON);
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,11 +61,12 @@ public class MainActivity extends Activity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        String[] data = {"", "one", "two", "three", "four", "five", "six"};
+        JSONObject data;
+        try { data = readTaskJSON(); }
+        catch (JSONException | IOException e) { data = new JSONObject(); }
 
         mAdapter = new CardsAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
-
 
     }
 
