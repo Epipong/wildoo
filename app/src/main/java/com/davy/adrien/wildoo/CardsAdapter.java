@@ -70,6 +70,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
 
             TextView tsk_name = (TextView) mView.findViewById(R.id.task_name);
             TextView tsk_status = (TextView) mView.findViewById(R.id.task_status);
+            TextView tsk_desc = (TextView) mView.findViewById(R.id.task_description);
 
             tsk_name.setText(tsk.getName());
 
@@ -80,7 +81,9 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             if (task_status < 0)
                 tsk_status.setTextColor(0xFFB23432);
             else
-                tsk_status.setTextColor(0xFF57FF8B);
+                tsk_status.setTextColor(0xFF004C1E);
+
+            tsk_desc.setText(tsk.getDescription());
         }
     }
 

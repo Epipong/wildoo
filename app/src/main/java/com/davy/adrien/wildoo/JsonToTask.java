@@ -14,11 +14,12 @@ public class JsonToTask {
         mTsk = tsk;
     }
 
+    // TODO: now time unit is dynamic, removes this function
     public long unitToSec(final String unit)
     {
         switch (unit)
         {
-            case "second":
+            case "seconds":
                 return 1;
             case "minute":
                 return 60;
@@ -27,7 +28,7 @@ public class JsonToTask {
             case "day":
                 return 60 * 60 * 24;
         }
-        return -1;
+        return 1;
     }
 
     public String getName() throws JSONException
@@ -64,6 +65,29 @@ public class JsonToTask {
         long shouldBeDone = ((currentTime - creationTime) / getStep()) * getObjectiveNumber();
 
         return (done - shouldBeDone) / getObjectiveNumber();
+    }
+
+    public String getDescription() throws JSONException
+    {
+        long objective = getObjectiveNumber();
+        String unit = getUnit();
+        // long step = getStep();
+
+        if (unit == "seconds")
+            if (objective > 60 * 60)
+            {
+                objective /= 60 * 60;
+                unit = "heures";
+            }
+            else if (objective > 60)
+            {
+                objective /= 60;
+                unit = "minutes";
+            }
+
+        // TODO: change step unit, and it could be day or week
+        return objective + " " + unit + " each day";
+
     }
 
     public String getUnit() throws JSONException
