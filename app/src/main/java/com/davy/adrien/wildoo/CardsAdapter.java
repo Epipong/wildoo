@@ -2,6 +2,7 @@ package com.davy.adrien.wildoo;
 
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,8 @@ import android.widget.TextView;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.sql.Timestamp;
 
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
 
@@ -27,13 +30,6 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         return (JSONObject) a.get(position);
     }
 
-    private String getTaskName(int position) throws JSONException
-    {
-        JSONObject task = getTask(position);
-
-        return task.getString("name");
-    }
-
     public abstract class ViewHolder extends RecyclerView.ViewHolder
     {
         View mView;
@@ -43,7 +39,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             mView = v;
         }
 
-        abstract void setUpView(int position);
+        abstract void setUpView(int position) throws JSONException;
     }
 
     public class HolderSmiley extends ViewHolder
@@ -68,15 +64,15 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         }
 
         @Override
-        public void setUpView(int position)
+        public void setUpView(int position) throws JSONException
         {
-            TextView t = (TextView) mView.findViewById(R.id.task_name);
+            JsonToTask tsk = new JsonToTask(getTask(position));
 
-            try {
-                t.setText(getTaskName(position));
-            } catch (JSONException e) {
-                t.setText("JSON error");
-            }
+            TextView tsk_name = (TextView) mView.findViewById(R.id.task_name);
+            TextView tsk_status = (TextView) mView.findViewById(R.id.task_status);
+
+            tsk_name.setText(tsk.getName());
+            tsk_status.setText(tsk.computeStatus() + " " + tsk.getUnit());
         }
     }
 
@@ -118,7 +114,11 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position)
     {
-        holder.setUpView(position);
+        try {
+            holder.setUpView(position);
+        } catch (JSONException e) {
+            Log.e("CardAdapter", "A JSON error occured" + e.getMessage());
+        }
     }
 
 

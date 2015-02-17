@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
     private JSONObject readTaskJSON() throws IOException, JSONException
     {
         String filename = "tasks.json";
-        String string = "{ \"tasks\" : [ { \"name\" : \"Piano\"}] }";
+        String string = "{ \"tasks\" : [ { \"name\" : \"Piano\", \"timestamp_create\" : \"1424086908000\", \"done\": 32, \"step\" : 86400, \"objective_number\": 20, \"unit\" : \"minute\"}] }";
         FileOutputStream outputStream;
 
         try {
@@ -33,7 +33,6 @@ public class MainActivity extends Activity {
             outputStream.write(string.getBytes());
             outputStream.close();
         } catch (Exception e) {
-            Log.i("", "Making the file FAILED !");
             e.printStackTrace();
         }
 
@@ -45,6 +44,8 @@ public class MainActivity extends Activity {
 
         return new JSONObject(resultingJSON);
     }
+
+    // [nom de la tâche] [combien d'unité] [n fois] [par [jour | semaine | mois]] en [minutes | heures | jours | pages | unité custom]
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
