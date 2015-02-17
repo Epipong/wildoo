@@ -25,7 +25,7 @@ public class MainActivity extends Activity {
     private JSONObject readTaskJSON() throws IOException, JSONException
     {
         String filename = "tasks.json";
-        String string = "{ \"tasks\" : [ { \"name\" : \"Piano\", \"timestamp_create\" : \"1424086908000\", \"done\": 32, \"step\" : 86400, \"objective_number\": 20, \"unit\" : \"minute\"}] }";
+        String string = "{ \"tasks\" : [ { \"name\" : \"Piano\", \"timestamp_create\" : \"1424086908000\", \"done\": 32, \"step\" : 86400, \"objective_number\": 20, \"unit\" : \"minutes\"}] }";
         FileOutputStream outputStream;
 
         try {
