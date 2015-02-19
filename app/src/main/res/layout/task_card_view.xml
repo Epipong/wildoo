@@ -37,5 +37,37 @@
             android:textSize="16dp"
             android:text = "Task time" />
 
+        <View
+            android:id="@+id/hr"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#dddddd"
+            android:layout_margin="15dp"
+            android:layout_below="@id/task_description" />
+
+        <LinearLayout
+            android:layout_below="@id/hr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:text="edit" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="done" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+1" />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Go" />
+
+        </LinearLayout>
+
     </RelativeLayout>
 </android.support.v7.widget.CardView>
