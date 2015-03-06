@@ -1,13 +1,13 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Light">
+    <style name="AppTheme">
         <item name="android:actionBarStyle">@style/WildooActionBar</item>
-<!--        <item name="android:background">#000000</item> -->
+        <item name="android:background">#000000</item>
     </style>
 
     <style name="WildooActionBar">
-<!--        <item name="android:background">#000000</item> -->
+        <item name="android:background">#000000</item>
     </style>
 
 

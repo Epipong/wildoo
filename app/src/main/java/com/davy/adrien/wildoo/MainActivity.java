@@ -26,9 +26,9 @@ public class MainActivity extends Activity {
     {
         String filename = "tasks.json";
         String string = "{ 'tasks' : [ "
-        + "{ 'name' : 'Guitare', 'timestamp_create' : '1424086908000', 'done': 32, 'step' : 86400, 'objective_number': 20, 'unit' : 'seconds'},"
-        + "{ 'name' : 'Cupcakes', 'timestamp_create' : '1424086908309', 'done': 2, 'step' : 86400, 'objective_number': 40, 'unit' : 'cup'},"
-        + "{ 'name' : 'Email', 'timestamp_create' : '1424086808000', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'}]"
+        + "{ 'name' : 'Piano', 'timestamp_create' : '1424086908000', 'done': 32, 'step' : 86400, 'objective_number': 20, 'unit' : 'seconds'},"
+        + "{ 'name' : 'Pompes', 'timestamp_create' : '1424086908309', 'done': 2, 'step' : 86400, 'objective_number': 40, 'unit' : 'pompes'},"
+        + "{ 'name' : 'Programmation', 'timestamp_create' : '1424086808000', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'}]"
         + "}";
         FileOutputStream outputStream;
 
