@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="AppTheme" parent="android:Theme.Material.Light">
+
+    <!-- the theme applied to the application or activity -->
+    <style name="AppTheme"
+        parent="@android:style/Theme.Material.Light">
+        <item name="android:colorPrimary">#FF991F</item>
+        <item name="android:colorPrimaryDark">#E57D00</item>
     </style>
 </resources>
