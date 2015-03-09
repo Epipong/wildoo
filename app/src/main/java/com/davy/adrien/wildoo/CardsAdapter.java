@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -84,6 +85,18 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
                 tsk_status.setTextColor(0xFF004C1E);
 
             tsk_desc.setText(tsk.getDescription());
+
+            // set the buttons icons
+            ImageButton button;
+
+            button = (ImageButton) mView.findViewById(R.id.button_play);
+            button.setImageResource(R.drawable.ic_action_play);
+            button = (ImageButton) mView.findViewById(R.id.button_edit);
+            button.setImageResource(R.drawable.ic_action_edit);
+            button = (ImageButton) mView.findViewById(R.id.button_done);
+            button.setImageResource(R.drawable.ic_action_accept);
+            button = (ImageButton) mView.findViewById(R.id.button_pone);
+            button.setImageResource(R.drawable.ic_action_new);
         }
     }
 

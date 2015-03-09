@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="add_button_primary">#FF991F</color>
+    <color name="add_button_primary_pressed">#E57D00</color>
+    <color name="add_button_ripple">#EEEEEE</color>
+
+</resources>

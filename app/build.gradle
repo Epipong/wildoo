@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.davy.adrien.wildoo"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 21
         versionCode 1
         versionName "1.0"
@@ -26,4 +26,5 @@ dependencies {
     compile 'com.android.support:support-v4:21.0.3'
     compile 'com.android.support:cardview-v7:+'
     compile 'com.android.support:recyclerview-v7:+'
+    compile 'com.melnykov:floatingactionbutton:1.2.0'
 }

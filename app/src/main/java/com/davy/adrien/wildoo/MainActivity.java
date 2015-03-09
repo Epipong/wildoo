@@ -8,16 +8,17 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import android.util.Log;
+import com.melnykov.fab.FloatingActionButton;
 
 
 public class MainActivity extends Activity {
@@ -28,6 +29,7 @@ public class MainActivity extends Activity {
         String string = "{ 'tasks' : [ "
         + "{ 'name' : 'Guitare', 'timestamp_create' : '1424086908000', 'done': 32, 'step' : 86400, 'objective_number': 20, 'unit' : 'seconds'},"
         + "{ 'name' : 'Cupcakes', 'timestamp_create' : '1424086908309', 'done': 2, 'step' : 86400, 'objective_number': 40, 'unit' : 'cup'},"
+        + "{ 'name' : 'Email', 'timestamp_create' : '1424086808000', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'},"
         + "{ 'name' : 'Email', 'timestamp_create' : '1424086808000', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'}]"
         + "}";
         FileOutputStream outputStream;
@@ -66,13 +68,16 @@ public class MainActivity extends Activity {
         mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
 
+        // add the fab to the recyclerView
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.attachToRecyclerView(mRecyclerView);
+
         JSONObject data;
         try { data = readTaskJSON(); }
         catch (JSONException | IOException e) { data = new JSONObject(); }
 
         mAdapter = new CardsAdapter(data);
         mRecyclerView.setAdapter(mAdapter);
-
     }
 
 

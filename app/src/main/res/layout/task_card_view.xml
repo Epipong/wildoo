@@ -51,10 +51,10 @@
             android:layout_height="match_parent"
             android:orientation="horizontal" >
 
-            <include layout="@layout/button_in_card" android:id="@+id/a" />
-            <include layout="@layout/button_in_card" />
-            <include layout="@layout/button_in_card" />
-            <include layout="@layout/button_in_card" />
+            <include layout="@layout/button_in_card" android:id="@+id/button_play"/>
+            <include layout="@layout/button_in_card" android:id="@+id/button_edit"/>
+            <include layout="@layout/button_in_card" android:id="@+id/button_pone"/>
+            <include layout="@layout/button_in_card" android:id="@+id/button_done"/>
 
         </LinearLayout>
 
