@@ -1,34 +1,42 @@
 package com.davy.adrien.wildoo;
 
+import android.content.Context;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Date;
+import java.lang.Math;
 
 public class JsonToTask {
 
-    private JSONObject mTsk;
+    public class Unit {
 
-    JsonToTask(JSONObject tsk)
-    {
-        mTsk = tsk;
+        // the divider we have to apply to seconds (ex: 1 minutes = 60 secs / 60)
+        public final String name;
+        public Unit(String name) { this.name = name; }
+
+        public String toString(long n)
+        {
+            final String hour = mContext.getString(R.string.hour);
+            final String minute = mContext.getString(R.string.minute);
+            final String seconds = mContext.getString(R.string.second);
+
+            if (name == hour)
+                return (n / 3600) + " " + hour + " " + Math.abs(((n % 3600) / 60)) + " " + minute;
+            else if (name == minute)
+                return (n / 60) + " " + minute + " " + (n % 60) + " " + seconds;
+            return Long.toString(n) + " " + name;
+        }
     }
 
-    // TODO: now time unit is dynamic, removes this function
-    public long unitToSec(final String unit)
+    private JSONObject mTsk;
+    private final Context mContext;
+
+    JsonToTask(Context context, JSONObject tsk)
     {
-        switch (unit)
-        {
-            case "seconds":
-                return 1;
-            case "minute":
-                return 60;
-            case "hour":
-                return 60 * 60;
-            case "day":
-                return 60 * 60 * 24;
-        }
-        return 1;
+        mTsk = tsk;
+        mContext = context;
     }
 
     public String getName() throws JSONException
@@ -55,6 +63,20 @@ public class JsonToTask {
     {
         return mTsk.getInt("objective_number");
     }
+
+    public Unit makeReadableUnit(final String unitName, long amount)
+    {
+        if (unitName.equals("seconds")) {
+            if (Math.abs(amount) >= 3600)
+                return new Unit(mContext.getString(R.string.hour));
+            else if (Math.abs(amount) >= 60)
+                return new Unit(mContext.getString(R.string.minute));
+        }
+
+        return new Unit(unitName);
+    }
+
+    // returns, the amount that the user have to do or has in advance
     public long computeStatus() throws JSONException
     {
         Date date = new Date();
@@ -90,7 +112,8 @@ public class JsonToTask {
 
     }
 
-    public String getUnit() throws JSONException
+    public String getUnit()
+            throws JSONException
     {
         return mTsk.getString("unit");
     }

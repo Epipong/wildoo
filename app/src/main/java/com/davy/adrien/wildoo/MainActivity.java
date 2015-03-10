@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
         try { data = readTaskJSON(); }
         catch (JSONException | IOException e) { data = new JSONObject(); }
 
-        mAdapter = new CardsAdapter(data);
+        mAdapter = new CardsAdapter(this, data);
         mRecyclerView.setAdapter(mAdapter);
     }
 

@@ -1,6 +1,7 @@
 package com.davy.adrien.wildoo;
 
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import java.sql.Timestamp;
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
 
     private JSONObject data;
+    private final Context mContext;
 
     private JSONArray getDataArray() throws JSONException
     {
@@ -67,7 +69,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         @Override
         public void setUpView(int position) throws JSONException
         {
-            JsonToTask tsk = new JsonToTask(getTask(position));
+            JsonToTask tsk = new JsonToTask(mContext, getTask(position));
 
             TextView tsk_name = (TextView) mView.findViewById(R.id.task_name);
             TextView tsk_status = (TextView) mView.findViewById(R.id.task_status);
@@ -77,7 +79,8 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
 
             long task_status = tsk.computeStatus();
 
-            tsk_status.setText(task_status + " " + tsk.getUnit());
+            final JsonToTask.Unit unit = tsk.makeReadableUnit(tsk.getUnit(), task_status);
+            tsk_status.setText(unit.toString(task_status));
 
             if (task_status < 0)
                 tsk_status.setTextColor(0xFFB23432);
@@ -100,9 +103,10 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         }
     }
 
-    public CardsAdapter(JSONObject data)
+    public CardsAdapter(Context context, JSONObject data)
     {
         this.data = data;
+        this.mContext = context;
     }
 
     @Override
