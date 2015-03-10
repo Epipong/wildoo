@@ -60,11 +60,11 @@ public class JsonToTask {
         Date date = new Date();
 
         long creationTime = getCreation();
-        long currentTime = date.getTime();
-        long done = getDone() * unitToSec(getUnit());
+        long currentTime = date.getTime() / 1000; // timestamp is in milliseconds
+        long done = getDone();
         long shouldBeDone = ((currentTime - creationTime) / getStep()) * getObjectiveNumber();
 
-        return (done - shouldBeDone) / getObjectiveNumber();
+        return done - shouldBeDone;
     }
 
     public String getDescription() throws JSONException

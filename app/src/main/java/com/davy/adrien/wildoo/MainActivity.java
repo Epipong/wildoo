@@ -23,14 +23,22 @@ import com.melnykov.fab.FloatingActionButton;
 
 public class MainActivity extends Activity {
 
+    /*
+    ** name : task name
+    ** timestamp_create : creation timestamp
+    ** done : how many of the unity has been done
+    ** step : duration in seconds between each time the user must do the objective number of units
+    ** objective_number : the number that the user must do (in unit unit)
+    ** unit : the unit for measuring the task (ex: minutes, apples)
+    */
     private JSONObject readTaskJSON() throws IOException, JSONException
     {
         String filename = "tasks.json";
         String string = "{ 'tasks' : [ "
-        + "{ 'name' : 'Guitare', 'timestamp_create' : '1424086908000', 'done': 32, 'step' : 86400, 'objective_number': 20, 'unit' : 'seconds'},"
-        + "{ 'name' : 'Cupcakes', 'timestamp_create' : '1424086908309', 'done': 2, 'step' : 86400, 'objective_number': 40, 'unit' : 'cup'},"
-        + "{ 'name' : 'Email', 'timestamp_create' : '1424086808000', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'},"
-        + "{ 'name' : 'Email', 'timestamp_create' : '1424086808000', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'}]"
+        + "{ 'name' : 'Guitare', 'timestamp_create' : '1424086908', 'done': 10, 'step' : 86400, 'objective_number': 600, 'unit' : 'seconds'},"
+        + "{ 'name' : 'Cupcakes', 'timestamp_create' : '1424086908', 'done': 2, 'step' : 86400, 'objective_number': 400, 'unit' : 'cup'},"
+        + "{ 'name' : 'Email', 'timestamp_create' : '1424086808', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'},"
+        + "{ 'name' : 'Email', 'timestamp_create' : '1424086808', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'}]"
         + "}";
         FileOutputStream outputStream;
 
@@ -50,8 +58,6 @@ public class MainActivity extends Activity {
 
         return new JSONObject(resultingJSON);
     }
-
-    // [nom de la tâche] [combien d'unité] [n fois] [par [jour | semaine | mois]] en [minutes | heures | jours | pages | unité custom]
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
