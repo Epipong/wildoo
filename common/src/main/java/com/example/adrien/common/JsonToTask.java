@@ -1,4 +1,4 @@
-package com.davy.adrien.wildoo;
+package com.example.adrien.common;
 
 import android.content.Context;
 
@@ -18,9 +18,9 @@ public class JsonToTask {
 
         public String toString(long n)
         {
-            final String hour = mContext.getString(R.string.hour);
-            final String minute = mContext.getString(R.string.minute);
-            final String seconds = mContext.getString(R.string.second);
+            final String hour = "heures";
+            final String minute = "minutes";
+            final String seconds = "secondes";
 
             if (name == hour)
                 return (n / 3600) + " " + hour + " " + Math.abs(((n % 3600) / 60)) + " " + minute;
@@ -31,12 +31,10 @@ public class JsonToTask {
     }
 
     private JSONObject mTsk;
-    private final Context mContext;
 
-    JsonToTask(Context context, JSONObject tsk)
+    public JsonToTask(JSONObject tsk)
     {
         mTsk = tsk;
-        mContext = context;
     }
 
     public String getName() throws JSONException
@@ -66,11 +64,12 @@ public class JsonToTask {
 
     public Unit makeReadableUnit(final String unitName, long amount)
     {
+        // TODO: use R.string.etc
         if (unitName.equals("seconds")) {
             if (Math.abs(amount) >= 3600)
-                return new Unit(mContext.getString(R.string.hour));
+                return new Unit("heures");
             else if (Math.abs(amount) >= 60)
-                return new Unit(mContext.getString(R.string.minute));
+                return new Unit("minutes");
         }
 
         return new Unit(unitName);

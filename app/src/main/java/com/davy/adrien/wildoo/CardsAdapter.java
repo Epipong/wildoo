@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.adrien.common.JsonToTask;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -69,7 +71,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         @Override
         public void setUpView(int position) throws JSONException
         {
-            JsonToTask tsk = new JsonToTask(mContext, getTask(position));
+            JsonToTask tsk = new JsonToTask(getTask(position));
 
             TextView tsk_name = (TextView) mView.findViewById(R.id.task_name);
             TextView tsk_status = (TextView) mView.findViewById(R.id.task_status);

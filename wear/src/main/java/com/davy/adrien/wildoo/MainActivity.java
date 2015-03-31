@@ -3,10 +3,13 @@ package com.davy.adrien.wildoo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.wearable.view.WatchViewStub;
+import android.util.Log;
 import android.widget.TextView;
-import android.support.v4.app.NotificationCompat.WearableExtender;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
@@ -25,27 +28,24 @@ public class MainActivity extends Activity {
             }
         });
 
-        int notificationId = 001;
-//        Build intent for notification content
-//            Intent viewIntent = new Intent(this, ViewEventActivity.class);
-//        viewIntent.putExtra(EXTRA_EVENT_ID, eventId);
-//        PendingIntent viewPendingIntent =
-//            PendingIntent.getActivity(this, 0, viewIntent, 0);
 
-        NotificationCompat.Builder notificationBuilder =
-            new NotificationCompat.Builder(this)
-            .setSmallIcon(R.drawable.ic_launcher)
-            .setContentTitle("hello world")
-            .setContentText("this is the text of the notification");
-            //.setContentIntent(viewPendingIntent);
+        String string = "{ 'tasks' : [ "
+                + "{ 'name' : 'Guitare', 'timestamp_create' : '1424086908', 'done': 10, 'step' : 86400, 'objective_number': 600, 'unit' : 'seconds'},"
+                + "{ 'name' : 'Cupcakes', 'timestamp_create' : '1424086908', 'done': 2, 'step' : 86400, 'objective_number': 400, 'unit' : 'cup'},"
+                + "{ 'name' : 'Email', 'timestamp_create' : '1424086808', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'},"
+                + "{ 'name' : 'Email', 'timestamp_create' : '1424086808', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'}]"
+                + "}";
 
-        // Get an instance of the NotificationManager service
-        NotificationManagerCompat notificationManager =
-            NotificationManagerCompat.from(this);
+        try {
+            JSONArray jsonTasks = (new JSONObject(string)).getJSONArray("tasks");
 
-        // Build the notification and issues it with notification manager.
-        notificationManager.notify(notificationId, notificationBuilder.build());
-        finish();
+            for (int i = 3; i >= 0; i--)
+                new TaskNotification((JSONObject) jsonTasks.get(i), this);
+            finish();
+        } catch (Exception e) {
+            // TODO
+        }
+
     }
 
 }
