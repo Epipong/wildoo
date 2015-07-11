@@ -1,13 +1,21 @@
 package com.davy.adrien.wildoo;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,6 +65,52 @@ public class MainActivity extends Activity {
         return new JSONObject(resultingJSON);
     }
 
+    private void spawn_new_task_dialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setTitle("New task")
+            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    // ok
+                    dialog.dismiss();
+                }
+            })
+            .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+        AlertDialog new_task = builder.create();
+
+        View inflated = getLayoutInflater().inflate(R.layout.add_dialog_layout, null);
+
+
+        Spinner how_many = (Spinner) inflated.findViewById(R.id.new_how_many);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.how_many,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        how_many.setAdapter(adapter);
+
+        Spinner what = (Spinner) inflated.findViewById(R.id.new_what);
+        ArrayAdapter<CharSequence> adapter_what = ArrayAdapter.createFromResource(this, R.array.what,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        what.setAdapter(adapter_what);
+
+        Spinner each = (Spinner) inflated.findViewById(R.id.new_each);
+        ArrayAdapter<CharSequence> adapter_each = ArrayAdapter.createFromResource(this, R.array.each,
+                android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        each.setAdapter(adapter_each);
+
+
+        new_task.setView(inflated);
+        new_task.show();
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
@@ -75,6 +129,13 @@ public class MainActivity extends Activity {
         // add the fab to the recyclerView
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.attachToRecyclerView(mRecyclerView);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                spawn_new_task_dialog();
+            }
+        });
 
         JSONObject data;
         try { data = readTaskJSON(); }

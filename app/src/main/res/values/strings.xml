@@ -9,4 +9,30 @@
     <string name="minute">minutes</string>
     <string name="second">seconds</string>
 
+    <string-array name="how_many">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+        <item>50</item>
+        <item>90</item>
+    </string-array>
+
+    <string-array name="what">
+        <item>time</item>
+        <item>min</item>
+        <item>hour</item>
+    </string-array>
+
+    <string-array name="each">
+        <item>Hour</item>
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+    </string-array>
+
 </resources>
