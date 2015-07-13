@@ -1,7 +1,6 @@
 package com.davy.adrien.wildoo;
 
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,30 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.adrien.common.JsonToTask;
-
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.sql.Timestamp;
+import java.util.List;
 
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
 
-    private JSONObject data;
-    private final Context mContext;
-
-    private JSONArray getDataArray() throws JSONException
-    {
-        return data.getJSONArray("tasks");
-    }
-
-    private JSONObject getTask(int position) throws  JSONException
-    {
-        JSONArray a = getDataArray();
-
-        return (JSONObject) a.get(position);
-    }
+    private List<TaskEntity> tasks;
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -69,19 +51,19 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         }
 
         @Override
-        public void setUpView(int position) throws JSONException
+        public void setUpView(final int position)
         {
-            JsonToTask tsk = new JsonToTask(getTask(position));
+            TaskEntity task = tasks.get(position);
 
             TextView tsk_name = (TextView) mView.findViewById(R.id.task_name);
             TextView tsk_status = (TextView) mView.findViewById(R.id.task_status);
             TextView tsk_desc = (TextView) mView.findViewById(R.id.task_description);
 
-            tsk_name.setText(tsk.getName());
+            tsk_name.setText(task.name);
 
-            long task_status = tsk.computeStatus();
+            long task_status = task.computeStatus();
 
-            final JsonToTask.Unit unit = tsk.makeReadableUnit(tsk.getUnit(), task_status);
+            final TaskEntity.Unit unit = task.makeReadableUnit(task.unit, task_status);
             tsk_status.setText(unit.toString(task_status));
 
             if (task_status < 0)
@@ -89,7 +71,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             else
                 tsk_status.setTextColor(0xFF004C1E);
 
-            tsk_desc.setText(tsk.getDescription());
+            tsk_desc.setText(task.getDescription());
 
             // set the buttons icons
             ImageButton button;
@@ -102,13 +84,23 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             button.setImageResource(R.drawable.ic_action_accept);
             button = (ImageButton) mView.findViewById(R.id.button_pone);
             button.setImageResource(R.drawable.ic_action_new);
+            button = (ImageButton) mView.findViewById(R.id.button_delete);
+            button.setImageResource(R.drawable.ic_delete);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tasks.get(position).delete();
+                    tasks.remove(position);
+                    notifyDataSetChanged();
+                }
+            });
         }
     }
 
-    public CardsAdapter(Context context, JSONObject data)
+    public CardsAdapter(List<TaskEntity> tasks)
     {
-        this.data = data;
-        this.mContext = context;
+        this.tasks = tasks;
     }
 
     @Override
@@ -151,15 +143,9 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         }
     }
 
-
     @Override
     public int getItemCount()
     {
-        try {
-            return getDataArray().length();
-        } catch (JSONException e)
-        {
-            return 0;
-        }
+        return tasks.size();
     }
 }

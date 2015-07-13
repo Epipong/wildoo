@@ -1,10 +1,6 @@
 package com.davy.adrien.wildoo;
 
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +14,7 @@ public class TaskNotification {
     {
         notificationId++;
 
+        /*
         JsonToTask tsk = new JsonToTask(data);
         long task_status = tsk.computeStatus();
 
@@ -46,6 +43,7 @@ public class TaskNotification {
 
         // Build the notification and issues it with notification manager.
         notificationManager.notify(notificationId, notificationBuilder.build());
+        */
 
     }
 }

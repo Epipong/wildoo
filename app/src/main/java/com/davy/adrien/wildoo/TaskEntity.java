@@ -1,14 +1,35 @@
-package com.example.adrien.common;
+package com.davy.adrien.wildoo;
 
-import android.content.Context;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.orm.SugarRecord;
 
 import java.util.Date;
-import java.lang.Math;
 
-public class JsonToTask {
+public class TaskEntity extends SugarRecord<TaskEntity> {
+
+    String name;
+    long timestamp_create;
+    long done;
+    long step;
+    long objective_number;
+    String unit;
+    int objective;
+
+    public TaskEntity() {
+    }
+
+    public TaskEntity(String name,
+                      long timestamp_create,
+                      long done,
+                      long step,
+                      long objective_number,
+                      String unit) {
+        this.name = name;
+        this.timestamp_create = timestamp_create;
+        this.done = done;
+        this.step = step;
+        this.objective_number = objective_number;
+        this.unit = unit;
+    }
 
     public class Unit {
 
@@ -30,38 +51,6 @@ public class JsonToTask {
         }
     }
 
-    private JSONObject mTsk;
-
-    public JsonToTask(JSONObject tsk)
-    {
-        mTsk = tsk;
-    }
-
-    public String getName() throws JSONException
-    {
-        return mTsk.getString("name");
-    }
-
-    public long getCreation() throws  JSONException
-    {
-        return Long.parseLong(mTsk.getString("timestamp_create"));
-    }
-
-    public int getDone() throws JSONException
-    {
-        return mTsk.getInt("done");
-    }
-
-    public int getStep() throws JSONException
-    {
-        return mTsk.getInt("step");
-    }
-
-    public int getObjectiveNumber() throws JSONException
-    {
-        return mTsk.getInt("objective_number");
-    }
-
     public Unit makeReadableUnit(final String unitName, long amount)
     {
         // TODO: use R.string.etc
@@ -76,23 +65,18 @@ public class JsonToTask {
     }
 
     // returns, the amount that the user have to do or has in advance
-    public long computeStatus() throws JSONException
+    public long computeStatus()
     {
-        Date date = new Date();
-
-        long creationTime = getCreation();
-        long currentTime = date.getTime() / 1000; // timestamp is in milliseconds
-        long done = getDone();
-        long shouldBeDone = ((currentTime - creationTime) / getStep()) * getObjectiveNumber();
+        long creationTime = timestamp_create;
+        long currentTime = System.currentTimeMillis();
+        long shouldBeDone = ((currentTime - creationTime) / step) * objective_number;
 
         return done - shouldBeDone;
     }
 
-    public String getDescription() throws JSONException
+    public String getDescription()
     {
-        long objective = getObjectiveNumber();
-        String unit = getUnit();
-        // long step = getStep();
+        long objective = objective_number;
 
         if (unit == "seconds")
             if (objective > 60 * 60)
@@ -109,11 +93,5 @@ public class JsonToTask {
         // TODO: change step unit, and it could be day or week
         return objective + " " + unit + " each day";
 
-    }
-
-    public String getUnit()
-            throws JSONException
-    {
-        return mTsk.getString("unit");
     }
 }

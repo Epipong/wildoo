@@ -2,77 +2,47 @@ package com.davy.adrien.wildoo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.util.List;
 
 import com.melnykov.fab.FloatingActionButton;
 
 
 public class MainActivity extends Activity {
 
-    /*
-    ** name : task name
-    ** timestamp_create : creation timestamp
-    ** done : how many of the unity has been done
-    ** step : duration in seconds between each time the user must do the objective number of units
-    ** objective_number : the number that the user must do (in unit unit)
-    ** unit : the unit for measuring the task (ex: minutes, apples)
-    */
-    private JSONObject readTaskJSON() throws IOException, JSONException
-    {
-        String filename = "tasks.json";
-        String string = "{ 'tasks' : [ "
-        + "{ 'name' : 'Guitare', 'timestamp_create' : '1424086908', 'done': 10, 'step' : 86400, 'objective_number': 600, 'unit' : 'seconds'},"
-        + "{ 'name' : 'Cupcakes', 'timestamp_create' : '1424086908', 'done': 2, 'step' : 86400, 'objective_number': 400, 'unit' : 'cup'},"
-        + "{ 'name' : 'Email', 'timestamp_create' : '1424086808', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'},"
-        + "{ 'name' : 'Email', 'timestamp_create' : '1424086808', 'done': 3000000, 'step' : 26400, 'objective_number': 90, 'unit' : 'seconds'}]"
-        + "}";
-        FileOutputStream outputStream;
-
-        try {
-            outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-            outputStream.write(string.getBytes());
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        FileInputStream inputStream = openFileInput(filename);
-        byte[] buffer = new byte[inputStream.available()];
-        inputStream.read(buffer, 0, inputStream.available());
-
-        String resultingJSON = new String(buffer, "UTF-8");
-
-        return new JSONObject(resultingJSON);
-    }
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView mRecyclerView;
 
     private void spawn_new_task_dialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        final View inflated = getLayoutInflater().inflate(R.layout.add_dialog_layout, null);
 
         builder.setTitle("New task")
             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    // ok
+
+                    EditText et = (EditText) inflated.findViewById(R.id.new_task_name);
+                    TaskEntity new_task =
+                            new TaskEntity(et.getText().toString(),
+                                    System.currentTimeMillis(), 43, 342, 8324, "minutes");
+                    new_task.save();
+
+                    mAdapter = new CardsAdapter(TaskEntity.listAll(TaskEntity.class));
+                    mRecyclerView.swapAdapter(mAdapter, false);
+
                     dialog.dismiss();
                 }
             })
@@ -84,9 +54,6 @@ public class MainActivity extends Activity {
             });
 
         AlertDialog new_task = builder.create();
-
-        View inflated = getLayoutInflater().inflate(R.layout.add_dialog_layout, null);
-
 
         Spinner how_many = (Spinner) inflated.findViewById(R.id.new_how_many);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.how_many,
@@ -114,10 +81,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        RecyclerView mRecyclerView;
         RecyclerView.LayoutManager mLayoutManager;
-        RecyclerView.Adapter mAdapter;
-
 
         setContentView(R.layout.activity_main);
 
@@ -132,16 +96,12 @@ public class MainActivity extends Activity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 spawn_new_task_dialog();
             }
         });
 
-        JSONObject data;
-        try { data = readTaskJSON(); }
-        catch (JSONException | IOException e) { data = new JSONObject(); }
-
-        mAdapter = new CardsAdapter(this, data);
+        List<TaskEntity> tasks = TaskEntity.listAll(TaskEntity.class);
+        mAdapter = new CardsAdapter(tasks);
         mRecyclerView.setAdapter(mAdapter);
     }
 

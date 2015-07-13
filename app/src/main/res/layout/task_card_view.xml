@@ -55,6 +55,7 @@
             <include layout="@layout/button_in_card" android:id="@+id/button_edit"/>
             <include layout="@layout/button_in_card" android:id="@+id/button_pone"/>
             <include layout="@layout/button_in_card" android:id="@+id/button_done"/>
+            <include layout="@layout/button_in_card" android:id="@+id/button_delete"/>
 
         </LinearLayout>
 
