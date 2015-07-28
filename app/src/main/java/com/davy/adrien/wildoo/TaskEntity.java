@@ -43,9 +43,9 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
             final String minute = "minutes";
             final String seconds = "secondes";
 
-            if (name == hour)
+            if (name.equals(hour))
                 return (n / 3600) + " " + hour + " " + Math.abs(((n % 3600) / 60)) + " " + minute;
-            else if (name == minute)
+            else if (name.equals(minute))
                 return (n / 60) + " " + minute + " " + (n % 60) + " " + seconds;
             return Long.toString(n) + " " + name;
         }
@@ -78,7 +78,7 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
     {
         long objective = objective_number;
 
-        if (unit == "seconds")
+        if (unit.equals("seconds"))
             if (objective > 60 * 60)
             {
                 objective /= 60 * 60;

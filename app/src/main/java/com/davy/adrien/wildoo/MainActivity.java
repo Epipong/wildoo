@@ -21,7 +21,7 @@ import com.melnykov.fab.FloatingActionButton;
 
 public class MainActivity extends Activity {
 
-    private RecyclerView.Adapter mAdapter;
+    private CardsAdapter mAdapter;
     private RecyclerView mRecyclerView;
 
     private void spawn_new_task_dialog() {
@@ -40,8 +40,8 @@ public class MainActivity extends Activity {
                                     System.currentTimeMillis(), 43, 342, 8324, "minutes");
                     new_task.save();
 
-                    mAdapter = new CardsAdapter(TaskEntity.listAll(TaskEntity.class));
-                    mRecyclerView.swapAdapter(mAdapter, false);
+                    mAdapter.getTasks().add(new_task);
+                    mAdapter.notifyDataSetChanged();
 
                     dialog.dismiss();
                 }
@@ -101,7 +101,7 @@ public class MainActivity extends Activity {
         });
 
         List<TaskEntity> tasks = TaskEntity.listAll(TaskEntity.class);
-        mAdapter = new CardsAdapter(tasks);
+        mAdapter = new CardsAdapter(tasks, this);
         mRecyclerView.setAdapter(mAdapter);
     }
 

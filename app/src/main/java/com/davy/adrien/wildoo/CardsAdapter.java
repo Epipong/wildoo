@@ -1,6 +1,9 @@
 package com.davy.adrien.wildoo;
 
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +19,7 @@ import java.util.List;
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
 
     private List<TaskEntity> tasks;
+    private Context mContext;
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -53,6 +57,9 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         @Override
         public void setUpView(final int position)
         {
+            if (position >= tasks.size())
+                return;
+
             TaskEntity task = tasks.get(position);
 
             TextView tsk_name = (TextView) mView.findViewById(R.id.task_name);
@@ -77,30 +84,48 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             ImageButton button;
 
             button = (ImageButton) mView.findViewById(R.id.button_play);
-            button.setImageResource(R.drawable.ic_action_play);
+            button.setImageResource(R.drawable.ic_play);
             button = (ImageButton) mView.findViewById(R.id.button_edit);
-            button.setImageResource(R.drawable.ic_action_edit);
+            button.setImageResource(R.drawable.ic_pencil);
             button = (ImageButton) mView.findViewById(R.id.button_done);
-            button.setImageResource(R.drawable.ic_action_accept);
+            button.setImageResource(R.drawable.ic_checkmark);
             button = (ImageButton) mView.findViewById(R.id.button_pone);
-            button.setImageResource(R.drawable.ic_action_new);
+            button.setImageResource(R.drawable.ic_plus);
             button = (ImageButton) mView.findViewById(R.id.button_delete);
             button.setImageResource(R.drawable.ic_delete);
 
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    tasks.get(position).delete();
-                    tasks.remove(position);
-                    notifyDataSetChanged();
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    builder.setTitle("Delete task '" + tasks.get(position).name + "'")
+                           .setMessage("Are you sure ?")
+                           .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog, int which) {
+                                   tasks.get(position).delete();
+                                   tasks.remove(position);
+                                   notifyItemRemoved(position);
+                                   notifyItemRangeChanged(position, tasks.size());
+                                   dialog.dismiss();
+                               }
+                           })
+                           .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                               @Override
+                               public void onClick(DialogInterface dialog, int which) {
+                                   dialog.dismiss();
+                               }
+                           });
+                    builder.show();
                 }
             });
         }
     }
 
-    public CardsAdapter(List<TaskEntity> tasks)
+    public CardsAdapter(List<TaskEntity> tasks, Context context)
     {
         this.tasks = tasks;
+        this.mContext = context;
     }
 
     @Override
@@ -147,5 +172,9 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
     public int getItemCount()
     {
         return tasks.size();
+    }
+
+    public List<TaskEntity> getTasks() {
+        return tasks;
     }
 }
