@@ -1,6 +1,7 @@
 package com.davy.adrien.wildoo;
 
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,7 +20,7 @@ import java.util.List;
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
 
     private List<TaskEntity> tasks;
-    private Context mContext;
+    private Activity mActivity;
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -97,7 +98,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
                     builder.setTitle("Delete task '" + tasks.get(position).name + "'")
                            .setMessage("Are you sure ?")
                            .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -122,10 +123,10 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         }
     }
 
-    public CardsAdapter(List<TaskEntity> tasks, Context context)
+    public CardsAdapter(List<TaskEntity> tasks, Activity activity)
     {
         this.tasks = tasks;
-        this.mContext = context;
+        this.mActivity = activity;
     }
 
     @Override
@@ -171,6 +172,16 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
     @Override
     public int getItemCount()
     {
+        // sets the visibility of the 'empty task' text message when there is no task
+        int visibility;
+
+        if (tasks.size() == 0)
+            visibility = View.VISIBLE;
+        else
+            visibility = View.GONE;
+
+        mActivity.findViewById(R.id.text_empty).setVisibility(visibility);
+
         return tasks.size();
     }
 

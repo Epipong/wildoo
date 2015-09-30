@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
                     EditText et = (EditText) inflated.findViewById(R.id.new_task_name);
                     TaskEntity new_task =
                             new TaskEntity(et.getText().toString(),
-                                    System.currentTimeMillis(), 43, 342, 8324, "minutes");
+                                    System.currentTimeMillis() / 1000, 43, 342, 8324, "seconds");
                     new_task.save();
 
                     mAdapter.getTasks().add(new_task);
@@ -101,10 +101,10 @@ public class MainActivity extends Activity {
         });
 
         List<TaskEntity> tasks = TaskEntity.listAll(TaskEntity.class);
+
         mAdapter = new CardsAdapter(tasks, this);
         mRecyclerView.setAdapter(mAdapter);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

@@ -15,11 +15,21 @@
         fab:fab_colorRipple="@color/add_button_ripple" />
 
 
+    <TextView
+        android:id="@+id/text_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Click on the '+' button to add a task!"
+        android:gravity="center"
+        />
+
+
 <LinearLayout
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
+
 
     <android.support.v7.widget.RecyclerView
         android:paddingLeft="@dimen/activity_horizontal_margin"

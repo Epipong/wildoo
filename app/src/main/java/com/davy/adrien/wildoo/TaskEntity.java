@@ -37,6 +37,7 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
         public final String name;
         public Unit(String name) { this.name = name; }
 
+        // FIXME: are these units really used ?
         public String toString(long n)
         {
             final String hour = "heures";
@@ -68,7 +69,7 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
     public long computeStatus()
     {
         long creationTime = timestamp_create;
-        long currentTime = System.currentTimeMillis();
+        long currentTime = System.currentTimeMillis() / 1000;
         long shouldBeDone = ((currentTime - creationTime) / step) * objective_number;
 
         return done - shouldBeDone;
@@ -77,21 +78,22 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
     public String getDescription()
     {
         long objective = objective_number;
+        String onscreen_unit = unit;
 
         if (unit.equals("seconds"))
             if (objective > 60 * 60)
             {
                 objective /= 60 * 60;
-                unit = "heures";
+                onscreen_unit = "heures";
             }
             else if (objective > 60)
             {
                 objective /= 60;
-                unit = "minutes";
+                onscreen_unit = "minutes";
             }
 
-        // TODO: change step unit, and it could be day or week
-        return objective + " " + unit + " each day";
+        // TODO: change step unit, and it could be day or week. Also, add "about 10 minutes each day"
+        return objective + " " + onscreen_unit + " each day";
 
     }
 }
