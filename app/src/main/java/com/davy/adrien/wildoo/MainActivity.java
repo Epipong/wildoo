@@ -5,8 +5,10 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,13 +33,44 @@ public class MainActivity extends Activity {
 
         builder.setTitle("New task")
             .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+                private int compute_delay(int objective, String each) {
+
+                    int delay;
+
+                    if (each.equals("Hour"))
+                        delay = 3600;
+                    else if (each.equals("Day"))
+                        delay = 3600 * 24;
+                    else if (each.equals("Week"))
+                        delay = 3600 * 24 * 7;
+                    else if (each.equals("Month"))
+                        delay = 3600 * 24 * 7 * 30;
+                    else
+                        delay = -1;
+                    return delay;
+                }
+
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
 
                     EditText et = (EditText) inflated.findViewById(R.id.new_task_name);
+                    String how_many = ((Spinner) inflated.findViewById(R.id.new_how_many))
+                            .getSelectedItem().toString();
+                    String what = ((Spinner) inflated.findViewById(R.id.new_what))
+                            .getSelectedItem().toString();
+                    String each = ((Spinner) inflated.findViewById(R.id.new_each))
+                            .getSelectedItem().toString();
+
+                    int how_many_integer = Integer.valueOf(how_many);
+                    int objective = TaskEntity.Unit.toSeconds(how_many_integer, what);
+
+                    int step = compute_delay(objective, each);
+
                     TaskEntity new_task =
                             new TaskEntity(et.getText().toString(),
-                                    System.currentTimeMillis() / 1000, 43, 342, 8324, "seconds");
+                                    System.currentTimeMillis() / 1000, 0, step, objective,
+                                    TaskEntity.Unit.isTimeUnit(what) ? "seconds" : what);
                     new_task.save();
 
                     mAdapter.getTasks().add(new_task);
@@ -104,6 +137,21 @@ public class MainActivity extends Activity {
 
         mAdapter = new CardsAdapter(tasks, this);
         mRecyclerView.setAdapter(mAdapter);
+
+        UpdateEachSecond();
+    }
+
+    private void UpdateEachSecond() {
+        final Handler handler = new Handler();
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.notifyDataSetChanged();
+                handler.postDelayed(this, 1000);
+            }
+        }, 1000);
+
     }
 
     @Override

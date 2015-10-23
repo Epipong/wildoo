@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.media.Image;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,7 +62,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             if (position >= tasks.size())
                 return;
 
-            TaskEntity task = tasks.get(position);
+            final TaskEntity task = tasks.get(position);
 
             TextView tsk_name = (TextView) mView.findViewById(R.id.task_name);
             TextView tsk_status = (TextView) mView.findViewById(R.id.task_status);
@@ -82,14 +83,47 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
             tsk_desc.setText(task.getDescription());
 
             // set the buttons icons
-            ImageButton button;
+            final ImageButton play_button = (ImageButton) mView.findViewById(R.id.button_play);
 
-            button = (ImageButton) mView.findViewById(R.id.button_play);
-            button.setImageResource(R.drawable.ic_play);
-            button = (ImageButton) mView.findViewById(R.id.button_edit);
+            if (task.unit.equals("seconds")) {
+
+                if (!task.playing)
+                    play_button.setImageResource(R.drawable.ic_play);
+                else
+                    play_button.setImageResource(android.R.drawable.ic_media_pause);
+
+                play_button.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!task.playing) {
+                            task.play();
+                            // FIXME: not safe
+                            play_button.setImageResource(android.R.drawable.ic_media_pause);
+                        } else {
+                            task.pause();
+                            // FIXME: not safe
+                            play_button.setImageResource(R.drawable.ic_play);
+
+                        }
+                    }
+                });
+            } else {
+                play_button.setVisibility(View.GONE);
+            }
+
+            ImageButton button = (ImageButton) mView.findViewById(R.id.button_edit);
             button.setImageResource(R.drawable.ic_pencil);
             button = (ImageButton) mView.findViewById(R.id.button_done);
             button.setImageResource(R.drawable.ic_checkmark);
+
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    task.done();
+                    notifyDataSetChanged();
+                }
+            });
+
             button = (ImageButton) mView.findViewById(R.id.button_pone);
             button.setImageResource(R.drawable.ic_plus);
             button = (ImageButton) mView.findViewById(R.id.button_delete);
@@ -120,6 +154,8 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
                     builder.show();
                 }
             });
+
+
         }
     }
 

@@ -1,5 +1,7 @@
 package com.davy.adrien.wildoo;
 
+import android.util.Log;
+
 import com.orm.SugarRecord;
 
 import java.util.Date;
@@ -12,7 +14,29 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
     long step;
     long objective_number;
     String unit;
-    int objective;
+
+    public boolean playing = false;
+    private final Thread mPlayThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+
+            long carry = 0;
+
+            while (true) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    return;
+                }
+                if (playing) {
+                    done++;
+                    // TODO: flush to the filesystem every ten seconds
+                    if (carry++ % 20 == 0)
+                        save();
+                }
+            }
+        }
+    });
 
     public TaskEntity() {
     }
@@ -23,15 +47,17 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
                       long step,
                       long objective_number,
                       String unit) {
+
         this.name = name;
         this.timestamp_create = timestamp_create;
         this.done = done;
         this.step = step;
         this.objective_number = objective_number;
         this.unit = unit;
+
     }
 
-    public class Unit {
+    static public class Unit {
 
         // the divider we have to apply to seconds (ex: 1 minutes = 60 secs / 60)
         public final String name;
@@ -50,6 +76,18 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
                 return (n / 60) + " " + minute + " " + (n % 60) + " " + seconds;
             return Long.toString(n) + " " + name;
         }
+
+        static public boolean isTimeUnit(String unit) {
+            return unit.equals("min") || unit.equals("hour");
+        }
+
+        static public int toSeconds(int how_many, String what) {
+            if (what.equals("min"))
+                return how_many * 60;
+            else if (what.equals("hour"))
+                return how_many * 3600;
+            return how_many;
+        }
     }
 
     public Unit makeReadableUnit(final String unitName, long amount)
@@ -65,12 +103,33 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
         return new Unit(unitName);
     }
 
+    public void play() {
+        playing = true;
+        if (!mPlayThread.isAlive())
+            mPlayThread.start();
+    }
+
+    public void pause() {
+        playing = false;
+    }
+
+    public void done() {
+        done = getShouldBeDone();
+        save();
+    }
+
+    private long getShouldBeDone() {
+        long creationTime = timestamp_create;
+        long currentTime = System.currentTimeMillis() / 1000;
+        float azefj = (currentTime - creationTime) / (float)step;
+
+        return (long)(azefj * objective_number);
+    }
+
     // returns, the amount that the user have to do or has in advance
     public long computeStatus()
     {
-        long creationTime = timestamp_create;
-        long currentTime = System.currentTimeMillis() / 1000;
-        long shouldBeDone = ((currentTime - creationTime) / step) * objective_number;
+        long shouldBeDone = getShouldBeDone();
 
         return done - shouldBeDone;
     }
@@ -79,6 +138,9 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
     {
         long objective = objective_number;
         String onscreen_unit = unit;
+
+        double day_multiplier = 3600f * 24f / step;
+        objective *= day_multiplier;
 
         if (unit.equals("seconds"))
             if (objective > 60 * 60)
