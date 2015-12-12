@@ -21,7 +21,7 @@ import java.util.List;
 public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> {
 
     private List<TaskEntity> tasks;
-    private Activity mActivity;
+    private MainActivity mActivity;
 
     public abstract class ViewHolder extends RecyclerView.ViewHolder
     {
@@ -70,12 +70,10 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
 
             tsk_name.setText(task.name);
 
-            long task_status = task.computeStatus();
+            tsk_status.setText(task.getReadableStatus());
 
-            final TaskEntity.Unit unit = task.makeReadableUnit(task.unit, task_status);
-            tsk_status.setText(unit.toString(task_status));
 
-            if (task_status < 0)
+            if (task.computeStatus() < 0)
                 tsk_status.setTextColor(0xFFB23432);
             else
                 tsk_status.setTextColor(0xFF004C1E);
@@ -90,18 +88,17 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
                 if (!task.playing)
                     play_button.setImageResource(R.drawable.ic_play);
                 else
-                    play_button.setImageResource(android.R.drawable.ic_media_pause);
+                    play_button.setImageResource(R.drawable.ic_pause);
 
                 play_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (!task.playing) {
                             task.play();
-                            // FIXME: not safe
-                            play_button.setImageResource(android.R.drawable.ic_media_pause);
+                            play_button.setImageResource(R.drawable.ic_pause);
+                            mActivity.running_task = position;
                         } else {
                             task.pause();
-                            // FIXME: not safe
                             play_button.setImageResource(R.drawable.ic_play);
 
                         }
@@ -162,7 +159,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
     public CardsAdapter(List<TaskEntity> tasks, Activity activity)
     {
         this.tasks = tasks;
-        this.mActivity = activity;
+        this.mActivity = (MainActivity)activity;
     }
 
     @Override

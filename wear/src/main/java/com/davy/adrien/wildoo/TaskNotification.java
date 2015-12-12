@@ -5,8 +5,6 @@ import android.content.Context;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.example.adrien.common.JsonToTask;
-
 public class TaskNotification {
 
     static int notificationId = 001;

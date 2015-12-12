@@ -2,6 +2,7 @@ package com.davy.adrien.wildoo;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Notification;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ public class MainActivity extends Activity {
 
     private CardsAdapter mAdapter;
     private RecyclerView mRecyclerView;
+    public int running_task = 0;
 
     private void spawn_new_task_dialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -148,6 +150,19 @@ public class MainActivity extends Activity {
             @Override
             public void run() {
                 mAdapter.notifyDataSetChanged();
+
+                Intent serviceIntent = new Intent(getApplicationContext(), TimerService.class);
+
+                if (mAdapter.getItemCount() != 0) {
+
+                    TaskEntity task = mAdapter.getTasks().get(running_task);
+
+                    serviceIntent.putExtra("task_name", task.getName());
+                    serviceIntent.putExtra("ETA", task.getReadableStatus());
+                    getApplicationContext().startService(serviceIntent);
+                }
+
+
                 handler.postDelayed(this, 1000);
             }
         }, 1000);

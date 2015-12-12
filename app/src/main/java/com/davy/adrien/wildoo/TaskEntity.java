@@ -41,6 +41,10 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
     public TaskEntity() {
     }
 
+    public String getName() {
+        return name;
+    }
+
     public TaskEntity(String name,
                       long timestamp_create,
                       long done,
@@ -158,4 +162,14 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
         return objective + " " + onscreen_unit + " each day";
 
     }
+
+
+    public String getReadableStatus() {
+
+        long task_status = computeStatus();
+
+        final TaskEntity.Unit unitT = makeReadableUnit(unit, task_status);
+        return unitT.toString(task_status);
+    }
+
 }
