@@ -59,6 +59,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
         @Override
         public void setUpView(final int position)
         {
+
             if (position >= tasks.size())
                 return;
 
@@ -85,7 +86,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
 
             if (task.unit.equals("seconds")) {
 
-                if (!task.playing)
+                if (!task.isPlaying())
                     play_button.setImageResource(R.drawable.ic_play);
                 else
                     play_button.setImageResource(R.drawable.ic_pause);
@@ -93,7 +94,7 @@ public class CardsAdapter extends RecyclerView.Adapter<CardsAdapter.ViewHolder> 
                 play_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (!task.playing) {
+                        if (!task.isPlaying()) {
                             task.play();
                             play_button.setImageResource(R.drawable.ic_pause);
                             mActivity.running_task = position;

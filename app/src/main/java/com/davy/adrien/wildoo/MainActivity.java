@@ -137,6 +137,10 @@ public class MainActivity extends Activity {
 
         List<TaskEntity> tasks = TaskEntity.listAll(TaskEntity.class);
 
+        for (TaskEntity task : tasks) {
+            task.pause();
+        }
+        
         mAdapter = new CardsAdapter(tasks, this);
         mRecyclerView.setAdapter(mAdapter);
 

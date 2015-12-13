@@ -40,7 +40,8 @@ public class TimerService extends IntentService {
 
     private void notifUp(Intent workIntent) {
 
-        Bundle extras = workIntent.getExtras();
+
+        Bundle extras = workIntent == null ? null : workIntent.getExtras();
 
         if (extras != null) {
             mTime = extras.getString("ETA");

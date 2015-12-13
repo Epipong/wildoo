@@ -15,7 +15,7 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
     long objective_number;
     String unit;
 
-    public boolean playing = false;
+    private boolean playing = false;
     private final Thread mPlayThread = new Thread(new Runnable() {
         @Override
         public void run() {
@@ -39,6 +39,10 @@ public class TaskEntity extends SugarRecord<TaskEntity> {
     });
 
     public TaskEntity() {
+    }
+
+    public boolean isPlaying() {
+        return playing;
     }
 
     public String getName() {
